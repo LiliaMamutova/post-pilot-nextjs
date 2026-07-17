@@ -15,7 +15,7 @@ import EditPostForm from '@/components/EditPostForm/EditPostForm';
 import CreatePostForm from '@/components/CreatePostForm/CreatePostForm';
 
 interface PostsClientProps {
-  userId: string;
+  userId?: string;
 }
 
 export default function PostsClient({ userId }: PostsClientProps) {
@@ -47,7 +47,7 @@ export default function PostsClient({ userId }: PostsClientProps) {
     setSearchQuery(newQuery);
   }, 300);
 
-  const totalPages = Math.ceil(data.totalCount / 8);
+  const totalPages = Math.ceil((data?.totalCount ?? 0) / 8);
   const posts = data?.posts ?? [];
 
   return (

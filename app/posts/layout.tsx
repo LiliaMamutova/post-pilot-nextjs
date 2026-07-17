@@ -1,4 +1,5 @@
 import css from './layout.module.css';
+import React from 'react';
 
 type LayoutPostsProps = {
   children: React.ReactNode;

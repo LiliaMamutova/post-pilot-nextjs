@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 import { createPortal } from "react-dom";
 
 import css from "./Modal.module.css";
@@ -9,7 +9,11 @@ interface ModalProps {
 }
 
 export default function Modal({ onClose, children }: ModalProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -27,6 +31,8 @@ export default function Modal({ onClose, children }: ModalProps) {
       onClose();
     }
   };
+
+  if(!isMounted) return null;
 
   return createPortal(
     <div

@@ -4,6 +4,7 @@ import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
 
 import 'modern-normalize';
 import './globals.css';
+import React from 'react';
 
 export default function RootLayout({
   children,
@@ -17,8 +18,10 @@ export default function RootLayout({
       <body>
         <TanStackProvider>
           <Header />
-          {children}
-          {modal}
+          <main>
+            {children}
+            {modal}
+          </main>
           <Footer />
         </TanStackProvider>
       </body>
