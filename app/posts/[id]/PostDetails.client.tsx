@@ -1,17 +1,14 @@
 'use client';
 
 import css from './PostDetails.module.css';
-import { useParams, useRouter } from 'next/navigation';
 import useFetchPosts from '@/queries/posts';
-
 import Loading from '@/app/loading';
-import Modal from '@/components/Modal/Modal';
-
-import { useState } from 'react';
 import { User } from '@/types/user';
 import { fetchUserById } from '@/lib/api';
+
+import { useState } from 'react';
 import {useEffect} from 'react';
-// import Error from '@/app/error';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function PostDetailsClient() {
   const params = useParams<{id: string}>();
