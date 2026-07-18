@@ -48,6 +48,7 @@ export default function EditPostForm({ onClose, initialValues }: EditPostFormPro
   };
 
   return (
+
     <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PostSchema}>
       <Form className={css.form}>
         <div className={css.formGroup}>
@@ -72,5 +73,6 @@ export default function EditPostForm({ onClose, initialValues }: EditPostFormPro
         </div>
       </Form>
     </Formik>
+
   );
 }

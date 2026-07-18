@@ -6,52 +6,51 @@ import useFetchPosts from '@/queries/posts';
 
 import Loading from '@/app/loading';
 import Modal from '@/components/Modal/Modal';
-import { useQuery } from '@tanstack/react-query';
+
+import { useState } from 'react';
+import { User } from '@/types/user';
 import { fetchUserById } from '@/lib/api';
+import {useEffect} from 'react';
+// import Error from '@/app/error';
 
 export default function PostDetailsClient() {
   const params = useParams<{id: string}>();
   const id = Number(params.id);
 
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
 
   const { data: post,
     isLoading: isPostLoading,
     isError: isPostError
   } = useFetchPosts(id);
 
-  const { data: user,
-    isLoading: isUserLoading,
-    isError: isUserError
-  } = useQuery({
-    queryKey: ["user", post?.userId],
-    queryFn:() => fetchUserById(post!.userId),
-   enabled: Boolean(post?.userId),
-  })
 
   const handleClickBack = () => {
     router.back();
   };
 
-  if(isPostLoading && isUserLoading)
+  useEffect(() => {
+    if(!post) return;
+
+    const fetchUserId = async () => {
+      const fetchUser = await fetchUserById(post?.userId);
+      setUser(fetchUser);
+    };
+    fetchUserId ();
+  }, [post]);
+
+
+  if(isPostLoading )  // && isUserLoading
     return (
-      <Modal onClose={handleClickBack}>
         <Loading />
-      </Modal>
     );
 
-  if(isPostError || isUserError || !post)
+  if(isPostError || !post) // || isUserError
     return (
-      <Modal onClose={handleClickBack}>
         <p>Something went wrong</p>
-      </Modal>
     );
 
-
-  // useEffect(() => {
-  //   const fn = async () => {};
-  //   fn();
-  // }, []);
 
   return (
     <>

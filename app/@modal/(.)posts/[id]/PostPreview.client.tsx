@@ -1,52 +1,53 @@
 'use client';
 
-// import { useQuery } from '@tanstack/react-query';
 import Modal from '@/components/Modal/Modal';
-// import { fetchPostById, fetchUserById } from '@/lib/api';
-// import { useParams, useRouter } from 'next/navigation';
-
 import css from './PostPreview.module.css';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Loading from '@/app/loading';
 import useFetchPosts from '@/queries/posts';
+import { useEffect, useState } from 'react';
+import { fetchUserById } from '@/lib/api';
+import { User } from '@/types/user';
 
+interface PostPreviewClientProps {
+  id: number;
+}
 
-export default function PostPreviewClient() {
+export default function PostPreviewClient({id}: PostPreviewClientProps) {
   const router = useRouter();
-  const params = useParams<{id: string}>();
-  const id = Number(params.id);
 
+  const [user, setUser] = useState<User | null>(null)
   const { data: post, isError: isPostError, isLoading: isPostLoading, } = useFetchPosts(id);
-  const { data: user, isError: isUserError, isLoading: isUserLoading, } = useFetchPosts(post!.userId);
 
 
   const handleClose = () => {
     router.back();
   };
 
-  if(isPostLoading || isUserLoading)
+  useEffect(() => {
+    if(!post) return;
+
+    const getUserId = async () => {
+      const fetchUser = await fetchUserById(post?.userId);
+      setUser(fetchUser)
+    };
+    getUserId();
+  }, [post]);
+
+
+  if(isPostLoading )
     return (
       <Modal onClose={handleClose}>
         <Loading />
       </Modal>
     )
 
-  if(isPostError || isUserError || !post)
+  if(isPostError || !post)
     return (
       <Modal onClose={handleClose}>
         <p>Something went wrong</p>
       </Modal>
     );
-
-
-  // useEffect(() => {
-  //   const getUserId = async (userId: number) => {
-  //     await fetchUserById(userId)
-  //   };
-  //
-  // }, []);
-
-
 
   return (
     <Modal onClose={handleClose}>
@@ -59,7 +60,7 @@ export default function PostPreviewClient() {
 
           <p className={css.content}>{post.body}</p>
         </div>
-        <p className={css.user}>{user!.userId}</p>
+        <p className={css.user}>{user?.name}</p>
       </div>
     </Modal>
   );
